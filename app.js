@@ -9,8 +9,9 @@ const User = require("./schema/user");
 const func = require('./function.js');
 
 // configuration
-let dbURI = "mongodb+srv://Alex:COMP3334@cluster0.tlddu4o.mongodb.net/?retryWrites=true&w=majority";
-let port = process.env.PORT || 4000;
+require('dotenv').config();
+const dbURI = process.env.DB_URI;
+const port = process.env.PORT;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
