@@ -3,13 +3,13 @@ let router = express.Router({ mergeParams: true });
 
 // localhost:3000/about/
 router.get('/', (req, res) => {
-  res.json({ msg: "This is the about" });
+    res.json({ msg: "This is the about" });
 });
 
 
 router.get('/details', (req, res) => {
-  res.json({ msg: "You got the routes" });
-  console.log("hehehaha");
+    res.json({ msg: "You got the routes" });
+    console.log("hehehaha");
 
 });
 

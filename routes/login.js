@@ -1,9 +1,9 @@
 const express = require('express');
-let login = express.Router({ mergeParams: true });
+let router = express.Router({ mergeParams: true });
 const User = require("../schema/user");
 
 // localhost:4000/login/
-login.post('/checkEmail', async (req, res) => {
+router.post('/checkEmail', async (req, res) => {
     try {
         let { email } = req.body;
         let result = await User.findOne({ email }).exec();
@@ -11,17 +11,18 @@ login.post('/checkEmail', async (req, res) => {
         if (result == null) {
             res.status(200).send({ error: "Invalid not found email" });
         } else {
-            res.status(200).send({ status: "ok" ,message: "Valid email", salt: result.salt });
+            let { userName, salt } = result;
+            res.status(200).send({ status: "ok" , message: "Valid email", data: { userName, salt } });
         }
     } catch (error) {
         console.log(error);
     }
 });
 
-login.post('/checkPassword', async (req, res) => {
+router.post('/checkPassword', async (req, res) => {
     try {
-        let { password } = req.body;
-        let result = await User.findOne({ password }).exec();
+        let { email, password } = req.body;
+        let result = await User.findOne({ email, password }).exec();
         if (result == null) {
             res.status(200).send({ error: "Wrong password" });
         } else {
@@ -32,8 +33,8 @@ login.post('/checkPassword', async (req, res) => {
     }
 });
 
-login.get('/', (req, res) => {
+router.get('/', (req, res) => {
     res.json({ msg: "LGTM" });
 });
 
-module.exports = login;
+module.exports = router;

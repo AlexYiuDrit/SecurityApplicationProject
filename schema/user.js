@@ -6,6 +6,15 @@ const userSchema = new mongoose.Schema({
     userName: { type: String, required: true },
     password: { type: String, required: true },
     salt: { type: String, required: true },
+    contacts: [ 
+        { 
+            userName: { type: String },
+            userId: { type: String },
+        } 
+    ],
+    groups: { type: Array },
+    publicKey: { type: String, required: true },
+    unhandledKeys: { type: Array },
 });
 
 module.exports = mongoose.model('User', userSchema);
