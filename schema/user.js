@@ -12,9 +12,14 @@ const userSchema = new mongoose.Schema({
             userId: { type: String },
         } 
     ],
-    groups: { type: Array },
     publicKey: { type: String, required: true },
-    unhandledKeys: { type: Array },
+    groups: [
+        {
+            groupid: { type: String },
+            SymmetricKey: { type: String },
+            handled: { type: Boolean },
+        }
+    ]
 });
 
 module.exports = mongoose.model('User', userSchema);

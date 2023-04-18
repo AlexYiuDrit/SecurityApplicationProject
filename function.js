@@ -16,9 +16,9 @@ const generateUUID = () => {
 // }
 
 // let salt = generateSalt();
-let salt = '166959f02006656c0b0ddde65cd96352';
+// let salt = '166959f02006656c0b0ddde65cd96352';
 // console.log('salt: ', salt);
 // console.log('hash: ', handleGenerateHash(salt + "Aliceisgood"));
-console.log(sha256(salt + "Charlieiscat"));
+// console.log(sha256(salt + "Charlieiscat"));
 
 module.exports = { generateSalt, generateUUID };

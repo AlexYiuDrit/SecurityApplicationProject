@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const about = require('./routes/about.js');
 const login = require('./routes/login.js');
+const chat = require('./routes/chat.js');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require("mongoose");
@@ -36,6 +37,7 @@ mongoose
 // routes
 app.use('/about', about);
 app.use('/login', login);
+app.use('/chat', chat);
 
 app.get("/user/:user", async (req, res) => {
     try {
@@ -54,7 +56,7 @@ app.get("/user/:user", async (req, res) => {
 
 app.post("/createUser", async (req, res) => { 
     try {
-        let { email, userName, oriPass, publicKey, contactList } = req.body;
+        let { email, userName, originalPassword, publicKey, contactList } = req.body;
         let result = await User.findOne({ email }).exec();
         console.log(contactList);
         console.log(result);
@@ -70,7 +72,7 @@ app.post("/createUser", async (req, res) => {
                 await userResult.save();
             }
             let salt = func.generateSalt();
-            let password = func.sha256(salt + oriPass);
+            let password = sha256(salt + originalPassword);
             let data = {
                 id,
                 email,
@@ -81,13 +83,14 @@ app.post("/createUser", async (req, res) => {
                 publicKey,
             }
             let newUser = new User(data);
-            newUser.save();
-            res.send({ msg: "User created" });
+            await newUser.save();
+            res.status(200).send({ msg: "User created", data: newUser });
         } else {
-            res.send({ msg: "User already exists" });
+            res.status(409).send({ msg: "User already exists" });
         }
     } catch (error) {
         console.log(error);
+        res.status(500).send({ msg: "Failed to create user" });
     }
 });
 
