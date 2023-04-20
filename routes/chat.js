@@ -7,9 +7,7 @@ const func = require('../function.js');
 router.get('/getUsersPublicKey', async (req, res) => {
     try {
         const emails = req.query.emails.split(',');
-        console.log(emails);
         const users = await User.find({ email: { $in: emails } });
-        console.log(users);
         let response = [];
         for (let i = 0; i < users.length; i++) {
             let { email, publicKey } = users[i];
@@ -26,17 +24,18 @@ router.get('/getUsersPublicKey', async (req, res) => {
 router.post('/distributeSymmetricKeyAndCreateGroup', async (req, res) => {
     try {
         let { groupName, user, members } = req.body;
-        // distritute symmetric key
+        // distribute symmetric key
         const groupId = func.generateUUID();
         members.push(user);
         for (let i = 0; i < members.length; i++) {
-            let member = await User.findOne({ email: members[i].email }).exec();
-            if (member !== null && member.email !== user.email) {
+            let member = await User.findOne({ id: members[i].id }).exec();
+            if (member !== null && member.id !== user.id) {
                 member.groups.push({ groupid: groupId, SymmetricKey: members[i].encryptedKey, handled: false });
-            } else if (member !== null && member.email === user.email) {
+            } else if (member !== null && member.id === user.id) {
                 member.groups.push({ groupid: groupId, SymmetricKey: members[i].encryptedKey, handled: true });
             }
             await member.save();
+
         }
         // create group
         for (let i = 0; i < members.length; i++) {
@@ -54,7 +53,7 @@ router.post('/distributeSymmetricKeyAndCreateGroup', async (req, res) => {
         res.status(200).send({ message: 'Key distributed & new Group created', data: newGroup });
     } catch (error) {
         console.log(error);
-        res.status(500).send({ msg: "Distribute symmetric key error" });
+        res.status(500).send({ msg: "Distribute symmetric key / Create group error" });
     }
 });
 

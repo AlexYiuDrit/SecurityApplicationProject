@@ -2,7 +2,6 @@ const express = require('express');
 let router = express.Router({ mergeParams: true });
 const User = require("../schema/user");
 
-// localhost:4000/login/
 router.post('/checkEmail', async (req, res) => {
     try {
         let { email } = req.body;
@@ -18,6 +17,22 @@ router.post('/checkEmail', async (req, res) => {
         console.log(error);
         res.status(500).send({ error: "Internal server error" });
     }
+});
+
+router.get('/getUserData', async (req, res) => {
+    try {
+        let result = await User.findOne({ email: req.query.email }).lean();
+        if (result == null) {
+            res.status(404).send({ msg: "User not found" });
+        } else {
+            delete result.password;
+            delete result.salt;
+            res.status(200).send({ message: 'Get User ok', data: result });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ msg: "Get User error" });
+    }    
 });
 
 router.post('/checkPassword', async (req, res) => {

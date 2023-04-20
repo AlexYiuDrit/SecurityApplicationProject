@@ -6,7 +6,7 @@ const groupSchema = new mongoose.Schema({
     members: [
         {
             name: { type: String, required: true },
-            email: { type: String, required: true },
+            id: { type: String, required: true },
         }
     ],
     messages: { type: String, required: true },

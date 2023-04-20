@@ -1,7 +1,6 @@
 const express = require('express');
 let router = express.Router({ mergeParams: true });
 
-// localhost:3000/about/
 router.get('/', (req, res) => {
     res.json({ msg: "This is the about" });
 });
@@ -18,7 +17,6 @@ router.get('/details/:language', (req, res) => {
     let query = req.query;
     res.json({ params, query });
 });
- 
 
 
 module.exports = router;

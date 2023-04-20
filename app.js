@@ -25,19 +25,23 @@ app.use(cors());
  */
 
 mongoose
-   .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-   .then((result) => {
-       console.log("Connected to db");
-   })
-   .catch((err) => {
-       console.log(err);
-   });
+    .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then((result) => {
+        console.log("Connected to db");
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
  
 // routes
 app.use('/about', about);
 app.use('/login', login);
 app.use('/chat', chat);
+
+app.get('/', (req, res) => {
+    res.json({ message: "Welcome" });
+});
 
 app.get("/user/:user", async (req, res) => {
     try {
